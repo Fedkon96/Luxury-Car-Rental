@@ -22,6 +22,7 @@ export default function Search() {
   const [price, setPrice] = useState("");
   const [fromKm, setFromKm] = useState<string>("");
   const [toKm, setToKm] = useState<string>("");
+  const [showMileagePresets, setShowMileagePresets] = useState<"none" | "from" | "to">("none");
   const [brands, setBrands] = useState<string[]>([]);
   const [brandsError, setBrandsError] = useState<string | null>(null);
   const [spinReset, setSpinReset] = useState(false);
@@ -55,6 +56,14 @@ export default function Search() {
       e.preventDefault();
       input.setSelectionRange(min, min);
     }
+  };
+
+  // Установити пресет для поля min або max пробігу
+  const applyPreset = (which: "from" | "to", value: number) => {
+    const s = String(value);
+    if (which === "from") setFromKm(s);
+    else setToKm(s);
+    setShowMileagePresets("none");
   };
 
   useEffect(() => {
@@ -170,6 +179,7 @@ export default function Search() {
                 requestAnimationFrame(() =>
                   e.currentTarget.setSelectionRange(min, min)
                 );
+                setShowMileagePresets("from");
               }}
               onClick={(e) => {
                 const min = FROM_PREFIX.length;
@@ -197,6 +207,7 @@ export default function Search() {
                 requestAnimationFrame(() =>
                   e.currentTarget.setSelectionRange(min, min)
                 );
+                setShowMileagePresets("to");
               }}
               onClick={(e) => {
                 const min = TO_PREFIX.length;
@@ -207,6 +218,19 @@ export default function Search() {
               onKeyDown={handleToKeyDown}
               aria-label="To"
             />
+            {/* Preset buttons for mileage */}
+            <div className={css.mileagePresets} aria-hidden={showMileagePresets === "none"}>
+              {[2000, 4000, 6000].map((p) => (
+                <button
+                  key={p}
+                  type="button"
+                  className={css.presetBtn}
+                  onClick={() => applyPreset(showMileagePresets === "from" ? "from" : "to", p)}
+                >
+                  {formatNumberWithComma(String(p))}
+                </button>
+              ))}
+            </div>
           </div>
         </li>
 
