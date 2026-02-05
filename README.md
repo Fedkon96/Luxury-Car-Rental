@@ -58,9 +58,9 @@ A polished, production-ready car rental platform designed for excellent user exp
 ## 🛠️ Tech Stack
 
 ### Core
-- **[Next.js 15](https://nextjs.org/)** - React framework with App Router
-- **[React 19](https://react.dev/)** - UI library
-- **[TypeScript](https://www.typescriptlang.org/)** - Type safety
+- **[Next.js](https://nextjs.org/)** 15.5.4 - React framework with App Router
+- **[React](https://react.dev/)** 19.1.0 - UI library
+- **[TypeScript](https://www.typescriptlang.org/)** 5.x - Type safety
 
 ### State Management & Data Fetching
 - **[TanStack Query](https://tanstack.com/query)** - Server state management, caching, and data synchronization
