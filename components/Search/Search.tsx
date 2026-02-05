@@ -9,7 +9,7 @@ import Icon from "@/components/Icon/Icon";
 import formatNumberWithComma from "@/lib/format";
 
 const PRICES = Array.from({ length: (500 - 30) / 10 + 1 }, (_, i) =>
-  String(30 + i * 10)
+  String(30 + i * 10),
 );
 
 export default function Search() {
@@ -22,7 +22,9 @@ export default function Search() {
   const [price, setPrice] = useState("");
   const [fromKm, setFromKm] = useState<string>("");
   const [toKm, setToKm] = useState<string>("");
-  const [showMileagePresets, setShowMileagePresets] = useState<"none" | "from" | "to">("none");
+  const [showMileagePresets, setShowMileagePresets] = useState<
+    "none" | "from" | "to"
+  >("none");
   const [brands, setBrands] = useState<string[]>([]);
   const [brandsError, setBrandsError] = useState<string | null>(null);
   const [spinReset, setSpinReset] = useState(false);
@@ -161,76 +163,88 @@ export default function Search() {
 
         <li className={css.groupInline}>
           <label className={css.label}>Car mileage / km</label>
-          <div className={css.split}>
-            <input
-              id={idMin}
-              name="minMileage"
-              type="text"
-              inputMode="numeric"
-              className={`${css.input} ${css.inputWithPrefix}`}
-              value={`${FROM_PREFIX}${formatNumberWithComma(fromKm)}`}
-              onChange={(e) => {
-                const raw = e.target.value.slice(FROM_PREFIX.length);
-                const cleaned = raw.replace(/\D+/g, "");
-                setFromKm(cleaned);
-              }}
-              onFocus={(e) => {
-                const min = FROM_PREFIX.length;
-                requestAnimationFrame(() =>
-                  e.currentTarget.setSelectionRange(min, min)
-                );
-                setShowMileagePresets("from");
-              }}
-              onClick={(e) => {
-                const min = FROM_PREFIX.length;
-                if ((e.currentTarget.selectionStart ?? 0) < min) {
-                  e.currentTarget.setSelectionRange(min, min);
-                }
-              }}
-              onKeyDown={handleFromKeyDown}
-              aria-label="From"
-            />
-            <input
-              id={idMax}
-              name="maxMileage"
-              type="text"
-              inputMode="numeric"
-              className={`${css.input} ${css.inputWithPrefix} ${css.leftBorder}`}
-              value={`${TO_PREFIX}${formatNumberWithComma(toKm)}`}
-              onChange={(e) => {
-                const raw = e.target.value.slice(TO_PREFIX.length);
-                const cleaned = raw.replace(/\D+/g, "");
-                setToKm(cleaned);
-              }}
-              onFocus={(e) => {
-                const min = TO_PREFIX.length;
-                requestAnimationFrame(() =>
-                  e.currentTarget.setSelectionRange(min, min)
-                );
-                setShowMileagePresets("to");
-              }}
-              onClick={(e) => {
-                const min = TO_PREFIX.length;
-                if ((e.currentTarget.selectionStart ?? 0) < min) {
-                  e.currentTarget.setSelectionRange(min, min);
-                }
-              }}
-              onKeyDown={handleToKeyDown}
-              aria-label="To"
-            />
-            {/* Preset buttons for mileage */}
-            <div className={css.mileagePresets} aria-hidden={showMileagePresets === "none"}>
-              {[2000, 4000, 6000].map((p) => (
-                <button
-                  key={p}
-                  type="button"
-                  className={css.presetBtn}
-                  onClick={() => applyPreset(showMileagePresets === "from" ? "from" : "to", p)}
-                >
-                  {formatNumberWithComma(String(p))}
-                </button>
-              ))}
+          <div className={css.mileageRow}>
+            <div className={css.split}>
+              <input
+                id={idMin}
+                name="minMileage"
+                type="text"
+                inputMode="numeric"
+                className={`${css.input} ${css.inputWithPrefix}`}
+                value={`${FROM_PREFIX}${formatNumberWithComma(fromKm)}`}
+                onChange={(e) => {
+                  const raw = e.target.value.slice(FROM_PREFIX.length);
+                  const cleaned = raw.replace(/\D+/g, "");
+                  setFromKm(cleaned);
+                }}
+                onFocus={(e) => {
+                  const min = FROM_PREFIX.length;
+                  requestAnimationFrame(() =>
+                    e.currentTarget.setSelectionRange(min, min),
+                  );
+                  setShowMileagePresets("from");
+                }}
+                onClick={(e) => {
+                  const min = FROM_PREFIX.length;
+                  if ((e.currentTarget.selectionStart ?? 0) < min) {
+                    e.currentTarget.setSelectionRange(min, min);
+                  }
+                }}
+                onKeyDown={handleFromKeyDown}
+                aria-label="From"
+              />
+              <input
+                id={idMax}
+                name="maxMileage"
+                type="text"
+                inputMode="numeric"
+                className={`${css.input} ${css.inputWithPrefix} ${css.leftBorder}`}
+                value={`${TO_PREFIX}${formatNumberWithComma(toKm)}`}
+                onChange={(e) => {
+                  const raw = e.target.value.slice(TO_PREFIX.length);
+                  const cleaned = raw.replace(/\D+/g, "");
+                  setToKm(cleaned);
+                }}
+                onFocus={(e) => {
+                  const min = TO_PREFIX.length;
+                  requestAnimationFrame(() =>
+                    e.currentTarget.setSelectionRange(min, min),
+                  );
+                  setShowMileagePresets("to");
+                }}
+                onClick={(e) => {
+                  const min = TO_PREFIX.length;
+                  if ((e.currentTarget.selectionStart ?? 0) < min) {
+                    e.currentTarget.setSelectionRange(min, min);
+                  }
+                }}
+                onKeyDown={handleToKeyDown}
+                aria-label="To"
+              />
             </div>
+            {showMileagePresets !== "none" ? (
+              <div
+                className={css.mileagePresets}
+                role="group"
+                aria-label="Mileage presets"
+              >
+                {[2000, 4000, 6000].map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    className={css.presetBtn}
+                    onClick={() =>
+                      applyPreset(
+                        showMileagePresets === "from" ? "from" : "to",
+                        p,
+                      )
+                    }
+                  >
+                    {formatNumberWithComma(String(p))}
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </div>
         </li>
 
